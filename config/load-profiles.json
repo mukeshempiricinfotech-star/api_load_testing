@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-02T23:59:00+05:30",
+  "timezone": "Asia/Kolkata",
+  "sourcePeriod": "2026-06-25..2026-07-01",
+  "calculation": {
+    "arrivalRate": "The lowest observed peak RPS among endpoints executed once per complete journey, so no step is intentionally over-driven in the load profile.",
+    "vus": "ceil(arrivalRate * targetIterationSeconds * 1.30); the 30% reserve covers response-time and think-time variance.",
+    "businessCriticalityFactor": "2 for checkout, payment, purchase, and authentication flows; 1 for other flows.",
+    "priorityScore": "riskSeverity * maximumObservedPeakRps * businessCriticalityFactor",
+    "priorityBands": "Ranked descending. Top ceil(20%) = High, next ceil(30%) = Medium, remainder = Low."
+  },
+  "profiles": {
+    "smoke": {"rateFactor": 0.02, "duration": "1m", "notes": "At least one iteration/s; contract and credential validation."},
+    "load": {"rateFactor": 1.0, "rampUp": "10m", "duration": "30m", "rampDown": "5m"},
+    "stress": {"steps": [1.0, 1.5, 2.0], "stepDuration": "10m", "rampUp": "5m", "rampDown": "5m"},
+    "spike": {"rateFactor": 2.0, "rampUp": "30s", "duration": "5m", "rampDown": "2m"},
+    "soak": {"rateFactor": 0.6, "rampUp": "10m", "duration": "2h", "rampDown": "10m"},
+    "breakpoint": {"steps": [0.5, 1.0, 1.5, 2.0, 3.0, 4.0], "stepDuration": "5m", "rampDown": "2m"}
+  },
+  "journeys": {
+    "auth-lifecycle": {"arrivalRate": 22, "targetIterationSeconds": 7, "preAllocatedVUs": 201, "maxVUs": 402, "thinkTimeSeconds": [1, 3], "endpointConstraint": "POST /api/auth/logout (22 peak RPS)"},
+    "browse-discovery": {"arrivalRate": 33, "targetIterationSeconds": 12, "preAllocatedVUs": 515, "maxVUs": 1030, "thinkTimeSeconds": [2, 5], "endpointConstraint": "GET /api/products/:id/reviews (33 peak RPS)"},
+    "cart-management": {"arrivalRate": 10, "targetIterationSeconds": 16, "preAllocatedVUs": 208, "maxVUs": 416, "thinkTimeSeconds": [1, 3], "endpointConstraint": "DELETE /api/cart/items/:id (estimated 10 peak RPS; estimated load)"},
+    "purchase-checkout": {"arrivalRate": 29, "targetIterationSeconds": 24, "preAllocatedVUs": 905, "maxVUs": 1810, "thinkTimeSeconds": [1, 3], "endpointConstraint": "GET /api/orders (29 peak RPS)"}
+  },
+  "thresholds": {"http_req_failed": "rate<0.01", "http_req_duration_p95": "p(95)<1100", "checks": "rate>0.99"}
+}
