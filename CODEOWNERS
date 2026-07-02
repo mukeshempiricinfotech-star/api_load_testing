@@ -1,0 +1,12 @@
+* @platform-team
+/src/modules/auth/ @auth-team
+/src/middleware/ @auth-team
+/src/modules/products/ @catalog-team
+/src/modules/reviews/ @catalog-team
+/src/modules/orders/ @commerce-team
+/src/modules/cart/ @commerce-team
+/src/modules/checkout/ @commerce-team @payments-team
+/src/workers/ @commerce-team
+/database/ @data-platform-team
+/performance/ @performance-team
+/test/ @quality-engineering-team

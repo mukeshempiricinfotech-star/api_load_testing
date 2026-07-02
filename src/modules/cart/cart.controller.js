@@ -1,0 +1,1 @@
+const service=require('./cart.service'); exports.get=async(req,res)=>res.json({data:await service.get(req.user.sub)}); exports.add=async(req,res)=>res.status(201).json({data:await service.add(req.user.sub,req.validated)}); exports.remove=async(req,res)=>{await service.remove(req.user.sub,req.params.id);res.status(204).end();};

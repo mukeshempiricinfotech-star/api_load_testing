@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "run": {"status": "completed", "completedAt": "2026-06-01T18:00:00+05:30", "timezone": "Asia/Kolkata", "coveragePercent": 61, "riskCount": 6},
+  "risks": [
+    {"id":"PERF-BASE-001","endpoint":"GET /api/products","category":"Missing Pagination","severity":"high","status":"open","owner":"@catalog-team","evidence":"Full catalog table read has no LIMIT/OFFSET."},
+    {"id":"PERF-BASE-002","endpoint":"GET /api/cart","category":"Missing Pagination","severity":"medium","status":"historical-open","owner":"@commerce-team","jiraTicketId":"APIPERF-2","requestedExampleTicketId":"APIPERF-095","jiraStatus":"Done","fixedInCurrentCode":true,"evidence":"The former general cart-rows endpoint was replaced by a user-scoped bounded cart resource."},
+    {"id":"PERF-BASE-003","endpoint":"GET /api/products/:id/reviews","category":"Missing Pagination","severity":"high","status":"open","owner":"@catalog-team","jiraTicketId":"APIPERF-1","requestedExampleTicketId":"APIPERF-101","jiraStatus":"To Do","evidence":"All reviews are returned with no record or response-size bound."},
+    {"id":"PERF-BASE-004","endpoint":"GET /api/orders","category":"N+1 Query","severity":"high","status":"open","owner":"@commerce-team","evidence":"A separate order_items query is executed for each order."},
+    {"id":"PERF-BASE-005","endpoint":"GET /api/products/:id","category":"Cache Miss","severity":"medium","status":"open","owner":"@catalog-team","evidence":"High-volume detail reads bypass the configured Redis cache."},
+    {"id":"PERF-BASE-006","endpoint":"POST /api/checkout/payment","category":"Synchronous External Call","severity":"high","status":"accepted-risk","owner":"@commerce-team","evidence":"Stripe PaymentIntent capture blocks request completion.","manualReviewerNote":{"author":"Priya N., Senior Commerce Engineer","createdAt":"2026-06-01T17:42:00+05:30","text":"confirmed with payments team, latency spike is expected during Diwali sale","immutable":true}}
+  ]
+}

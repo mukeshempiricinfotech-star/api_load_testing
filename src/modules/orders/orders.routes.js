@@ -1,0 +1,3 @@
+const router=require('express').Router(); const { z }=require('zod'); const authenticate=require('../../middleware/authenticate'); const controller=require('./orders.controller'); const wrap=require('../../lib/asyncHandler');
+const schema=z.object({items:z.array(z.object({productId:z.uuid(),quantity:z.number().int().min(1).max(20)})).min(1).max(50),shippingAddress:z.object({name:z.string().min(1),line1:z.string().min(1),line2:z.string().optional(),city:z.string().min(1),region:z.string().min(1),postalCode:z.string().min(3),country:z.string().length(2)})});
+router.use(authenticate); router.get('/',wrap(controller.list)); router.post('/',(req,_res,next)=>{try{req.validated=schema.parse(req.body);next();}catch(e){next(e);}},wrap(controller.create)); module.exports=router;

@@ -1,0 +1,8 @@
+const bcrypt=require('bcryptjs'); const db=require('../src/database');
+const catalog=[['SKU-SHOE-001','Orbit Running Shoe',8999,'footwear'],['SKU-BAG-002','Weekender Canvas Bag',6499,'accessories'],['SKU-HDPH-003','Studio Wireless Headphones',12999,'electronics'],['SKU-MUG-004','Double-Wall Travel Mug',2499,'home'],['SKU-JKT-005','Rain Shell Jacket',10999,'outerwear'],['SKU-WCH-006','Solar Field Watch',15999,'accessories']];
+async function main(){ const hash=await bcrypt.hash('load-test-password',12); const {rows:[user]}=await db.query("INSERT INTO users(email,password_hash,first_name,last_name) VALUES('buyer@example.test',$1,'Asha','Kapoor') ON CONFLICT ((lower(email))) DO UPDATE SET password_hash=EXCLUDED.password_hash RETURNING id",[hash]);
+ for(const [sku,name,price,category] of catalog) await db.query('INSERT INTO products(sku,name,description,price_cents,inventory_count,category,attributes) VALUES($1,$2,$3,$4,5000,$5,$6) ON CONFLICT(sku) DO NOTHING',[sku,name,`${name} made for everyday use.`,price,category,{seed:true}]);
+ const {rows:[cart]}=await db.query('INSERT INTO carts(user_id) VALUES($1) ON CONFLICT(user_id) DO UPDATE SET updated_at=now() RETURNING id',[user.id]); const {rows:products}=await db.query('SELECT id,price_cents FROM products WHERE sku=ANY($1)',[catalog.slice(0,3).map(x=>x[0])]);
+ for(const product of products) await db.query('INSERT INTO cart_items(cart_id,product_id,quantity) VALUES($1,$2,1) ON CONFLICT(cart_id,product_id) DO NOTHING',[cart.id,product.id]);
+ console.log(`Seeded ${products.length} catalog and cart rows for ${user.id}`); }
+main().catch((e)=>{console.error(e);process.exitCode=1;}).finally(()=>db.close());
