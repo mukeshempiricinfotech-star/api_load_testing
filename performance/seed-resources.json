@@ -1,0 +1,12 @@
+{
+  "createdAt": "2026-07-02T17:10:00+05:30",
+  "jira": {
+    "project": {"key":"APIPERF","name":"api_performance_task_project","url":"https://expert-team-w5rkwxzm.atlassian.net/jira/software/projects/APIPERF"},
+    "openReviewsRisk": {"key":"APIPERF-1","url":"https://expert-team-w5rkwxzm.atlassian.net/browse/APIPERF-1","status":"To Do","component":"Products","labels":["Missing-Pagination","performance-baseline"]},
+    "resolvedCartRisk": {"key":"APIPERF-2","url":"https://expert-team-w5rkwxzm.atlassian.net/browse/APIPERF-2","status":"Done","labels":["Missing-Pagination","historical-fixed","performance-baseline"]},
+    "keyAllocationNote": "The Jira project was empty. Jira allocated APIPERF-1 and APIPERF-2; clients cannot assign the example keys APIPERF-101 and APIPERF-095."
+  },
+  "googleDrive": {
+    "previousRunReport": {"name":"api_load_report","id":"1YtoiGfQcVTCWpOep4suhpVGL0zXe_QXpDOHoBDT43nk","url":"https://docs.google.com/document/d/1YtoiGfQcVTCWpOep4suhpVGL0zXe_QXpDOHoBDT43nk/edit?usp=drivesdk"}
+  }
+}
