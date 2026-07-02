@@ -6,8 +6,7 @@
   "calculation": {
     "arrivalRate": "The lowest observed peak RPS among endpoints executed once per complete journey, so no step is intentionally over-driven in the load profile.",
     "vus": "ceil(arrivalRate * targetIterationSeconds * 1.30); the 30% reserve covers response-time and think-time variance.",
-    "businessCriticalityFactor": "2 for checkout, payment, purchase, and authentication flows; 1 for other flows.",
-    "priorityScore": "riskSeverity * maximumObservedPeakRps * businessCriticalityFactor",
+    "riskPriorityOrdering": "Strict lexicographic ordering: Authentication > Payment > Checkout > Orders > Products > Others; then seven-day mean requests/day; then observed/estimated latency or payload-size impact.",
     "priorityBands": "Ranked descending. Top ceil(20%) = High, next ceil(30%) = Medium, remainder = Low."
   },
   "profiles": {
