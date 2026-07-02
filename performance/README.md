@@ -29,3 +29,5 @@ Manual notes in the baseline are reviewer-authored evidence. Automated updates m
 | Database Query Inefficiency | `orders.service.js:2-6` issues one line-items query per returned order; the enclosing history list is also unbounded. | Low | Use a set-based join/aggregation or two batched queries and paginate order history. | Verified current. | — |
 
 The previous `GET /api/cart` pagination risk remains fixed, its historical record and `APIPERF-2` reference are retained, and no current ticket was recreated.
+
+Reviewer Status: Repository, Jira, and Google Doc outputs completed. The required Microsoft Teams post could not be delivered after exact-name resolution, normalized-name retry, full visible-team enumeration, and direct channel-message search because `Platform_Engineering_Team` / `Performance_Test_Track` is not visible to the connected Teams account. The send-ready message is preserved in `risk-analysis.json`.
