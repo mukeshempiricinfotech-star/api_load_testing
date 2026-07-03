@@ -104,8 +104,8 @@
       "rootCauseSummary":"Primary: src/modules/orders/orders.service.js:2-6 runs one order_items query inside a loop for every order. Supporting causes: the initial order query and controller response have no page/size bound.",
       "priority":"High",
       "recommendedFix":"Replace per-order queries with a set-based join/JSON aggregation or two batched queries, and add bounded keyset pagination to the order history.",
-      "reviewerStatus":"Verified current",
-      "jiraTicketId":null,
+      "reviewerStatus":"Verified current; APIPERF-6 created To Do and unassigned",
+      "jiraTicketId":"APIPERF-6",
       "lastUpdatedTimestamp":"2026-07-02T23:59:00+05:30"
     },
     {
