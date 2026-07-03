@@ -1,4 +1,35 @@
 services:
+  api:
+    build: .
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: 3000
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/api_load_testing
+      REDIS_URL: redis://redis:6379
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-dev-only-access-secret-change-me}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-dev-only-refresh-secret-change-me}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-sk_test_replace_me}
+      STRIPE_CURRENCY: ${STRIPE_CURRENCY:-usd}
+      DD_AGENT_HOST: datadog-agent
+      DD_TRACE_ENABLED: ${DD_TRACE_ENABLED:-true}
+      DD_METRICS_ENABLED: ${DD_METRICS_ENABLED:-true}
+      DD_ENV: ${DD_ENV:-production}
+      DD_SERVICE: ${DD_SERVICE:-api-load-testing}
+      DD_VERSION: ${DD_VERSION:-1.0.0}
+      GA_MEASUREMENT_ID: ${GA_MEASUREMENT_ID:-}
+      GA_API_SECRET: ${GA_API_SECRET:-}
+      GA_CLIENT_ID: ${GA_CLIENT_ID:-api-load-testing.1}
+    labels:
+      com.datadoghq.tags.env: ${DD_ENV:-production}
+      com.datadoghq.tags.service: ${DD_SERVICE:-api-load-testing}
+      com.datadoghq.tags.version: ${DD_VERSION:-1.0.0}
+      com.datadoghq.ad.logs: >-
+        [{"source":"nodejs","service":"api-load-testing"}]
+    depends_on:
+      - postgres
+      - redis
+      - datadog-agent
+    ports: ["3000:3000"]
   postgres:
     image: postgres:16-alpine
     environment:
@@ -13,6 +44,22 @@ services:
     image: redis:7-alpine
     ports: ["6379:6379"]
     volumes: ["redis-data:/data"]
+  datadog-agent:
+    image: gcr.io/datadoghq/agent:7
+    environment:
+      DD_API_KEY: ${DD_API_KEY:-}
+      DD_SITE: ${DD_SITE:-us5.datadoghq.com}
+      DD_APM_ENABLED: "true"
+      DD_APM_NON_LOCAL_TRAFFIC: "true"
+      DD_DOGSTATSD_NON_LOCAL_TRAFFIC: "true"
+      DD_LOGS_ENABLED: "true"
+      DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL: "true"
+      DD_CONTAINER_EXCLUDE: name:datadog-agent
+      DD_PROCESS_CONFIG_PROCESS_COLLECTION_ENABLED: "true"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
 volumes:
   postgres-data:
   redis-data:

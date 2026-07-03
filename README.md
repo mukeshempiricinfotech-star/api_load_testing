@@ -11,6 +11,25 @@ The application intentionally retains five observable performance risks: unbound
 3. Run `npm install`, then `npm run seed`.
 4. Run `npm run dev` and, separately, `npm run worker`.
 
+To run the API and its Datadog Agent together, set `DD_API_KEY` in `.env` and run `docker compose up --build`. The `api` container emits APM traces, DogStatsD request metrics, correlated JSON logs, and (when configured) GA4 Measurement Protocol events.
+
+## Production observability
+
+The repository is wired for Datadog US5 and GA4 without committing any account credentials. Copy the observability fields from `.env.example` into the deployment environment or GitHub environment secrets/variables:
+
+| Variable | Purpose |
+|---|---|
+| `DD_API_KEY` | Datadog Agent and optional GitHub Actions CI Visibility authentication (GitHub secret) |
+| `DD_SITE` | Datadog site; this account uses `us5.datadoghq.com` (GitHub variable) |
+| `DD_ENV`, `DD_SERVICE`, `DD_VERSION` | Unified Datadog tags |
+| `GA_MEASUREMENT_ID` | GA4 web-stream Measurement ID (`G-...`) |
+| `GA_API_SECRET` | GA4 Measurement Protocol API secret |
+| `GA_CLIENT_ID` | Non-personal aggregate client ID for server-side events |
+
+The runtime sends one `api_request` GA4 event per completed request with the HTTP method, Express route template, status, duration, and environment. It intentionally excludes URL query strings, path values, authorization data, IP addresses, and user attributes. Datadog metrics use the same low-cardinality route templates under `api_load_testing.http.*`.
+
+The GitHub Actions workflow in `.github/workflows/observability.yml` runs tests under Datadog CI Visibility after the `DD_API_KEY` repository secret is added. Without that secret it still runs the same test suite, so pull requests are not blocked while setup is incomplete.
+
 The sample account created by the seed script is `buyer@example.test` / `load-test-password`.
 
 ## HTTP contract

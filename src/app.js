@@ -6,10 +6,12 @@ const orderRoutes = require('./modules/orders/orders.routes');
 const cartRoutes = require('./modules/cart/cart.routes');
 const checkoutRoutes = require('./modules/checkout/checkout.routes');
 const errorHandler = require('./middleware/errorHandler');
+const observabilityMiddleware = require('./middleware/observability');
 
 const app = express();
 app.disable('x-powered-by');
 app.use(express.json({ limit: '1mb' }));
+app.use(observabilityMiddleware);
 app.get('/health', (_req, res) => res.json({ status: 'ok', service: 'api-load-testing' }));
 app.use('/api/auth', authRoutes);
 app.use('/api/products', reviewRoutes);

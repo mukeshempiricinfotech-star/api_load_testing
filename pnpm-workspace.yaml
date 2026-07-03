@@ -1,2 +1,7 @@
 allowBuilds:
-  msgpackr-extract: set this to true or false
+  '@datadog/native-appsec': false
+  '@datadog/native-iast-taint-tracking': false
+  '@datadog/native-metrics': true
+  '@datadog/pprof': false
+  msgpackr-extract: true
+  unix-dgram: true

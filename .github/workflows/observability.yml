@@ -1,0 +1,39 @@
+name: Test and report to Datadog
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      DD_API_KEY: ${{ secrets.DD_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Tests with Datadog CI Visibility
+        if: ${{ env.DD_API_KEY != '' }}
+        env:
+          DD_SITE: ${{ vars.DD_SITE || 'us5.datadoghq.com' }}
+          DD_CIVISIBILITY_AGENTLESS_ENABLED: "true"
+          DD_SERVICE: api-load-testing
+          DD_ENV: ci
+          NODE_OPTIONS: -r dd-trace/ci/init
+        run: pnpm test
+      - name: Tests without Datadog
+        if: ${{ env.DD_API_KEY == '' }}
+        run: pnpm test
+      - name: Validate Docker Compose
+        run: docker compose config --quiet

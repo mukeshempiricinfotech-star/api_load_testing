@@ -18,4 +18,10 @@ module.exports = {
   jwtRefreshTtl: process.env.JWT_REFRESH_TTL || '7d',
   stripeSecretKey: required('STRIPE_SECRET_KEY', 'sk_test_replace_me'),
   stripeCurrency: process.env.STRIPE_CURRENCY || 'usd',
+  serviceName: process.env.DD_SERVICE || 'api-load-testing',
+  serviceVersion: process.env.DD_VERSION || '1.0.0',
+  datadogMetricsEnabled: process.env.DD_METRICS_ENABLED === 'true',
+  ga4MeasurementId: process.env.GA_MEASUREMENT_ID || '',
+  ga4ApiSecret: process.env.GA_API_SECRET || '',
+  ga4ClientId: process.env.GA_CLIENT_ID || 'api-load-testing.1',
 };

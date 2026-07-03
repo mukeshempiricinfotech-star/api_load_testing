@@ -1,0 +1,8 @@
+.git
+.github
+.env
+node_modules
+coverage
+performance
+k6
+locust
